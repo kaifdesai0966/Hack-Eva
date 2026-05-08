@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduBridge - Smart Learning</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-icon"><i class="fa-solid fa-bridge-water"></i></span>
+            EDUBRIDGE
+        </div>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#stats">Impact</a>
+            <a href="#" class="nav-btn glow-btn-small open-auth-btn" id="loginBtn">Login</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-left">
+            <div class="badge">
+                <i class="fa-solid fa-bolt"></i> AI-Powered Education
+            </div>
+            <h1>Smart Learning.<br><span>Stronger Future.</span></h1>
+            <p>A remote classroom platform designed for rural colleges. Learn, teach, track and grow — all in one
+                intelligent ecosystem.</p>
+            <div class="hero-buttons">
+                <button class="glow-btn hero-btn open-auth-btn">
+                    <span>Get Started </span>
+                    <div class="btn-glow"></div>
+                </button>
+                <button class="outline-btn">
+                    <i class="fa-solid fa-play"></i> View Demo
+                </button>
+            </div>
+            <div class="trust-line">
+                <div class="avatars">
+                    <img src="https://i.pravatar.cc/100?img=1" alt="user">
+                    <img src="https://i.pravatar.cc/100?img=2" alt="user">
+                    <img src="https://i.pravatar.cc/100?img=3" alt="user">
+                </div>
+                <span>Trusted by students and mentors across India</span>
+            </div>
+        </div>
+        <div class="hero-right">
+            <div class="image-wrapper">
+                <div class="ambient-glow purple-glow"></div>
+                <div class="ambient-glow blue-glow"></div>
+                <img src="assets/hero_books.png" alt="Glowing Futuristic Books" class="hero-image">
+                <div class="floating-badge hero-badge-1"><i class="fa-solid fa-graduation-cap"></i> Shape Your Future
+                </div>
+                <div class="floating-badge hero-badge-2"><i class="fa-solid fa-book-open"></i> Learn Today</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="section-header">
+            <h2>Intelligent Ecosystem</h2>
+            <p>Everything you need to excel in remote education.</p>
+        </div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="icon-box"><i class="fa-solid fa-robot"></i></div>
+                <h3>AI Study Assistant</h3>
+                <p>Personalized learning paths and instant academic support powered by advanced AI.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box"><i class="fa-solid fa-list-check"></i></div>
+                <h3>Task & Goal Tracking</h3>
+                <p>Stay organized with smart dashboards that monitor your progress and daily habits.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box"><i class="fa-solid fa-share-nodes"></i></div>
+                <h3>Assignment & Note Sharing</h3>
+                <p>Seamlessly collaborate with peers and mentors in a unified digital workspace.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section id="stats" class="stats">
+        <div class="stat-container">
+            <div class="stat-item">
+                <h3 class="gradient-text">500+</h3>
+                <p>Colleges</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="gradient-text">25K+</h3>
+                <p>Students</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="gradient-text">1K+</h3>
+                <p>Mentors</p>
+            </div>
+            <div class="stat-item">
+                <h3 class="gradient-text">95%</h3>
+                <p>Satisfaction Rate</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-container glass-panel">
+            <div class="cta-content">
+                <h2>Ready to transform your learning experience?</h2>
+                <p>Join the future of remote education today.</p>
+                <button class="glow-btn cta-btn open-auth-btn">
+                    <span>Start Your Journey Today</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </div>
+            <div class="cta-image">
+                <img src="assets/cta_books.png" alt="Futuristic Book Stack">
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="logo">
+            <span class="logo-icon"><i class="fa-solid fa-bridge-water"></i></span>
+            EDUBRIDGE
+        </div>
+        <p>&copy; 2026 EduBridge Technologies. Empowering Rural Education.</p>
+    </footer>
+
+    <!-- Auth Overlay -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-backdrop"></div>
+        <div class="auth-container">
+            <button class="close-auth" id="closeAuth"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2>Welcome back</h2>
+                    <p>Enter your email to sign in to your dashboard</p>
+                </div>
+
+                <form class="auth-form-new" id="loginForm">
+                    <div class="input-group-new">
+                        <label>Email</label>
+                        <input type="email" placeholder="name@example.com" required>
+                        <div class="input-glow-new"></div>
+                    </div>
+
+                    <div class="input-group-new">
+                        <div class="label-row">
+                            <label>Password</label>
+                            <a href="#" class="forgot-link">Forgot password?</a>
+                        </div>
+                        <div class="password-wrapper">
+                            <input type="password" placeholder="••••••••" required>
+                            <i class="fa-solid fa-eye-slash toggle-pw"></i>
+                            <div class="input-glow-new"></div>
+                        </div>
+                    </div>
+
+                    <div class="role-section">
+                        <label>Login as</label>
+                        <div class="role-toggles">
+                            <div class="role-card active" data-role="student">
+                                <i class="fa-solid fa-user-graduate"></i>
+                                <span>Student</span>
+                            </div>
+                            <div class="role-card" data-role="mentor">
+                                <i class="fa-solid fa-chalkboard-user"></i>
+                                <span>Mentor</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="neon-btn">
+                        <span>Sign In</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </form>
+
+                <p class="signup-text">Don't have an account? <a href="#">Sign up</a></p>
+                <p class="demo-text">Demo: Use any email/password. Try both Student & Mentor roles.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

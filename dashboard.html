@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduBridge - Student Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon"><i class="fa-solid fa-bridge-water"></i></span>
+                EDUBRIDGE
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="active"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="#"><i class="fa-solid fa-video"></i> Live Classes</a>
+                <a href="#"><i class="fa-solid fa-book-open"></i> Assignments</a>
+                <a href="#"><i class="fa-solid fa-note-sticky"></i> Notes</a>
+                <a href="#"><i class="fa-solid fa-chart-simple"></i> Analytics</a>
+                <a href="#"><i class="fa-solid fa-calendar-check"></i> Attendance</a>
+                <a href="#" class="ai-link"><i class="fa-solid fa-robot"></i> AI Assistant <span class="badge-new">NEW</span></a>
+            </nav>
+            <div class="sidebar-bottom">
+                <a href="#"><i class="fa-solid fa-gear"></i> Settings</a>
+                <a href="#" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="topbar">
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Search courses, notes, or tasks...">
+                </div>
+                <div class="topbar-right">
+                    <div class="streak-indicator">
+                        <i class="fa-solid fa-fire streak-icon"></i>
+                        <span id="navStreak">0</span> Day Streak
+                    </div>
+                    <button class="icon-btn"><i class="fa-solid fa-bell"></i></button>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=Student&background=random" alt="Avatar" id="userAvatar">
+                        <span id="userName">Loading...</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-scrollable">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner glass-panel">
+                    <div class="banner-content">
+                        <h1 id="welcomeMessage">Welcome back, Student!</h1>
+                        <p id="welcomeSub">Ready to continue your learning journey?</p>
+                    </div>
+                    <div class="banner-illustration">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                </div>
+
+                <!-- Empty State Alert (Hidden by default) -->
+                <div id="emptyStateAlert" class="empty-state-alert glass-panel" style="display: none;">
+                    <div class="alert-icon"><i class="fa-solid fa-rocket"></i></div>
+                    <div class="alert-text">
+                        <h3>Start your learning journey today!</h3>
+                        <p>Your dashboard is currently empty. Complete your first task or attend a class to see your analytics grow.</p>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <!-- Productivity Score -->
+                    <div class="stat-card glass-panel score-card">
+                        <h3>Productivity Score</h3>
+                        <div class="progress-ring-container">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring__circle bg" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                                <circle id="scoreRing" class="progress-ring__circle fg" stroke="url(#gradient)" stroke-width="8" fill="transparent" r="52" cx="60" cy="60" stroke-dasharray="326.72" stroke-dashoffset="326.72"/>
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#00e1ff" />
+                                        <stop offset="100%" stop-color="#9d00ff" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="score-value">
+                                <span id="scoreValue">0</span>%
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tasks Completed -->
+                    <div class="stat-card glass-panel">
+                        <div class="stat-header">
+                            <div class="stat-icon purple"><i class="fa-solid fa-check-double"></i></div>
+                            <span class="trend positive"><i class="fa-solid fa-arrow-up"></i> Dynamic</span>
+                        </div>
+                        <div class="stat-info">
+                            <h2 id="tasksCompletedValue">0</h2>
+                            <p>Tasks Completed</p>
+                        </div>
+                    </div>
+
+                    <!-- Study Streak -->
+                    <div class="stat-card glass-panel">
+                        <div class="stat-header">
+                            <div class="stat-icon orange"><i class="fa-solid fa-fire"></i></div>
+                        </div>
+                        <div class="stat-info">
+                            <h2 id="streakValue">0</h2>
+                            <p>Day Streak</p>
+                        </div>
+                    </div>
+
+                    <!-- Attendance -->
+                    <div class="stat-card glass-panel">
+                        <div class="stat-header">
+                            <div class="stat-icon blue"><i class="fa-solid fa-calendar-check"></i></div>
+                        </div>
+                        <div class="stat-info">
+                            <h2 id="attendanceValue">0%</h2>
+                            <p>Attendance Rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="main-grid">
+                    <!-- Analytics Chart -->
+                    <div class="chart-container glass-panel">
+                        <div class="section-header">
+                            <h3>Weekly Study Hours</h3>
+                            <button class="btn-small outline">View Full</button>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="studyChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Task Manager -->
+                    <div class="tasks-container glass-panel">
+                        <div class="section-header">
+                            <h3>My Tasks</h3>
+                        </div>
+                        
+                        <form id="addTaskForm" class="add-task-form">
+                            <input type="text" id="taskInput" placeholder="Add a new task..." required>
+                            <button type="submit" class="btn-small glow"><i class="fa-solid fa-plus"></i></button>
+                        </form>
+
+                        <div class="task-list" id="taskList">
+                            <!-- Tasks will be rendered here via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
