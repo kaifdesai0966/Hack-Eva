@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduBridge - Mentor Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="dashboard-layout mentor-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon"><i class="fa-solid fa-bridge-water"></i></span>
+                EDUBRIDGE
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="active"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="#"><i class="fa-solid fa-users"></i> Students</a>
+                <a href="#"><i class="fa-solid fa-book-open"></i> Assignments</a>
+                <a href="#"><i class="fa-solid fa-folder-open"></i> Notes & Resources</a>
+                <a href="#"><i class="fa-solid fa-chart-line"></i> Productivity Analytics</a>
+                <a href="#" class="ai-link"><i class="fa-solid fa-robot"></i> AI Insights <span
+                        class="badge-new">NEW</span></a>
+                <a href="#"><i class="fa-solid fa-bell"></i> Notifications</a>
+            </nav>
+            <div class="sidebar-bottom">
+                <a href="#"><i class="fa-solid fa-gear"></i> Settings</a>
+                <a href="#" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="topbar">
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Search students, assignments, or insights...">
+                </div>
+                <div class="topbar-right">
+                    <div class="streak-indicator active-students-badge">
+                        <i class="fa-solid fa-users streak-icon"></i>
+                        <span id="activeStudentsNav">0</span> Active Now
+                    </div>
+                    <button class="icon-btn"><i class="fa-solid fa-bell"></i></button>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=Professor&background=random" alt="Avatar"
+                            id="userAvatar">
+                        <span id="userName">Loading...</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-scrollable">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner glass-panel mentor-banner">
+                    <div class="banner-content">
+                        <h1 id="welcomeMessage">Welcome , Professor 👋</h1>
+                        <p id="welcomeSub">Here is your class performance overview for today.</p>
+                    </div>
+                    <div class="banner-illustration">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                </div>
+
+                <!-- Empty State Alert (Hidden by default) -->
+                <div id="emptyStateAlert" class="empty-state-alert glass-panel" style="display: none;">
+                    <div class="alert-icon"><i class="fa-solid fa-user-plus"></i></div>
+                    <div class="alert-text">
+                        <h3>Waiting for students to join!</h3>
+                        <p>Your class is currently empty. Share your invite link so students can register and populate
+                            your dashboard.</p>
+                    </div>
+                </div>
+
+                <!-- Section 1: Stats Grid -->
+                <div class="stats-grid mentor-stats">
+                    <!-- Total Students -->
+                    <div class="stat-card glass-panel">
+                        <div class="stat-header">
+                            <div class="stat-icon purple"><i class="fa-solid fa-users"></i></div>
+                            <span class="trend positive"><i class="fa-solid fa-arrow-up"></i> Live</span>
+                        </div>
+                        <div class="stat-info">
+                            <h2 id="totalStudentsValue">0</h2>
+                            <p>Total Enrolled Students</p>
+                        </div>
+                    </div>
+
+                    <!-- Avg Task Completion Rate -->
+                    <div class="stat-card glass-panel score-card">
+                        <h3>Task Completion Rate</h3>
+                        <div class="progress-ring-container small-ring">
+                            <svg class="progress-ring" width="100" height="100">
+                                <circle class="progress-ring__circle bg" stroke="rgba(255,255,255,0.1)" stroke-width="6"
+                                    fill="transparent" r="44" cx="50" cy="50" />
+                                <circle id="taskRateRing" class="progress-ring__circle fg" stroke="url(#gradient)"
+                                    stroke-width="6" fill="transparent" r="44" cx="50" cy="50" stroke-dasharray="276.46"
+                                    stroke-dashoffset="276.46" />
+                            </svg>
+                            <div class="score-value small-val">
+                                <span id="taskRateValue">0</span>%
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Streaks -->
+                    <div class="stat-card glass-panel">
+                        <div class="stat-header">
+                            <div class="stat-icon orange"><i class="fa-solid fa-fire"></i></div>
+                        </div>
+                        <div class="stat-info">
+                            <h2 id="activeStreaksValue">0</h2>
+                            <p>Active Study Streaks</p>
+                        </div>
+                    </div>
+
+                    <!-- Class Productivity -->
+                    <div class="stat-card glass-panel">
+                        <div class="stat-header">
+                            <div class="stat-icon blue"><i class="fa-solid fa-bolt"></i></div>
+                            <span id="classStatusTrend" class="trend">Pending</span>
+                        </div>
+                        <div class="stat-info">
+                            <h2 id="classProductivityValue">0%</h2>
+                            <p>Avg Productivity Score</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2 & 5: AI Insights & Student Monitoring -->
+                <div class="main-grid split-grid">
+                    <!-- AI Insights Panel -->
+                    <div class="ai-insights-panel glass-panel">
+                        <div class="section-header">
+                            <h3><i class="fa-solid fa-robot"></i> AI Productivity Insights</h3>
+                        </div>
+                        <div class="insights-list" id="aiInsightsList">
+                            <!-- Dynamic Insights -->
+                        </div>
+                    </div>
+
+                    <!-- Student Monitoring Table -->
+                    <div class="student-table-container glass-panel">
+                        <div class="section-header">
+                            <h3>Student Monitoring Panel</h3>
+                            <button class="btn-small outline"><i class="fa-solid fa-filter"></i> Filter</button>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="mentor-table">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Overall Score</th>
+                                        <th>Tasks Completed</th>
+                                        <th>Streak</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentTableBody">
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3 & 4: Heatmap & Assignment Management -->
+                <div class="main-grid">
+                    <!-- Productivity Heatmap -->
+                    <div class="chart-container glass-panel">
+                        <div class="section-header">
+                            <h3>Class Productivity Trends</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="classTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Assignment Management -->
+                    <div class="assignment-panel glass-panel">
+                        <div class="section-header">
+                            <h3>Resource & Assignment Control</h3>
+                        </div>
+                        <div class="upload-zone">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <p>Drag & Drop materials here or <span>Browse</span></p>
+                        </div>
+                        <div class="resource-list">
+                            <div class="resource-item">
+                                <div class="res-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                                <div class="res-info">
+                                    <h4>Chapter 4 - AI Fundamentals.pdf</h4>
+                                    <p>Shared with all students</p>
+                                </div>
+                                <button class="btn-small glow">Manage</button>
+                            </div>
+                            <div class="resource-item">
+                                <div class="res-icon"><i class="fa-solid fa-video"></i></div>
+                                <div class="res-info">
+                                    <h4>Lecture Recording - Week 2</h4>
+                                    <p>84 Views</p>
+                                </div>
+                                <button class="btn-small glow">Manage</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="mentor-dashboard.js"></script>
+</body>
+
+</html>

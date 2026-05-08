@@ -20,12 +20,12 @@
             </div>
             <nav class="sidebar-nav">
                 <a href="#" class="active"><i class="fa-solid fa-house"></i> Dashboard</a>
-                <a href="#"><i class="fa-solid fa-video"></i> Live Classes</a>
                 <a href="#"><i class="fa-solid fa-book-open"></i> Assignments</a>
                 <a href="#"><i class="fa-solid fa-note-sticky"></i> Notes</a>
-                <a href="#"><i class="fa-solid fa-chart-simple"></i> Analytics</a>
-                <a href="#"><i class="fa-solid fa-calendar-check"></i> Attendance</a>
+                <a href="#"><i class="fa-solid fa-chart-pie"></i> Study Analytics</a>
+                <a href="#"><i class="fa-solid fa-bullseye"></i> Goals</a>
                 <a href="#" class="ai-link"><i class="fa-solid fa-robot"></i> AI Assistant <span class="badge-new">NEW</span></a>
+                <a href="#"><i class="fa-solid fa-bell"></i> Notifications</a>
             </nav>
             <div class="sidebar-bottom">
                 <a href="#"><i class="fa-solid fa-gear"></i> Settings</a>
@@ -58,28 +58,28 @@
                 <!-- Welcome Banner -->
                 <div class="welcome-banner glass-panel">
                     <div class="banner-content">
-                        <h1 id="welcomeMessage">Welcome back, Student!</h1>
-                        <p id="welcomeSub">Ready to continue your learning journey?</p>
+                        <h1 id="welcomeMessage">Welcome, Student! 👋</h1>
+                        <p id="welcomeSub">Ready to crush your productivity goals today?</p>
                     </div>
                     <div class="banner-illustration">
-                        <i class="fa-solid fa-graduation-cap"></i>
+                        <i class="fa-solid fa-rocket"></i>
                     </div>
                 </div>
 
                 <!-- Empty State Alert (Hidden by default) -->
                 <div id="emptyStateAlert" class="empty-state-alert glass-panel" style="display: none;">
-                    <div class="alert-icon"><i class="fa-solid fa-rocket"></i></div>
+                    <div class="alert-icon"><i class="fa-solid fa-bolt"></i></div>
                     <div class="alert-text">
                         <h3>Start your learning journey today!</h3>
-                        <p>Your dashboard is currently empty. Complete your first task or attend a class to see your analytics grow.</p>
+                        <p>Your dashboard is currently empty. Complete your first task to unlock your AI study assistant and analytics.</p>
                     </div>
                 </div>
 
-                <!-- Stats Grid -->
-                <div class="stats-grid">
+                <!-- Stats Grid (3 Cards) -->
+                <div class="stats-grid student-stats">
                     <!-- Productivity Score -->
                     <div class="stat-card glass-panel score-card">
-                        <h3>Productivity Score</h3>
+                        <h3>Overall Score</h3>
                         <div class="progress-ring-container">
                             <svg class="progress-ring" width="120" height="120">
                                 <circle class="progress-ring__circle bg" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
@@ -101,7 +101,7 @@
                     <div class="stat-card glass-panel">
                         <div class="stat-header">
                             <div class="stat-icon purple"><i class="fa-solid fa-check-double"></i></div>
-                            <span class="trend positive"><i class="fa-solid fa-arrow-up"></i> Dynamic</span>
+                            <span class="trend positive"><i class="fa-solid fa-arrow-up"></i> Active</span>
                         </div>
                         <div class="stat-info">
                             <h2 id="tasksCompletedValue">0</h2>
@@ -116,39 +116,28 @@
                         </div>
                         <div class="stat-info">
                             <h2 id="streakValue">0</h2>
-                            <p>Day Streak</p>
-                        </div>
-                    </div>
-
-                    <!-- Attendance -->
-                    <div class="stat-card glass-panel">
-                        <div class="stat-header">
-                            <div class="stat-icon blue"><i class="fa-solid fa-calendar-check"></i></div>
-                        </div>
-                        <div class="stat-info">
-                            <h2 id="attendanceValue">0%</h2>
-                            <p>Attendance Rate</p>
+                            <p>Day Study Streak</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Main Content Grid -->
+                <!-- Main Grid Row 1 -->
                 <div class="main-grid">
-                    <!-- Analytics Chart -->
+                    <!-- Weekly Study Hours Chart -->
                     <div class="chart-container glass-panel">
                         <div class="section-header">
                             <h3>Weekly Study Hours</h3>
-                            <button class="btn-small outline">View Full</button>
+                            <button class="btn-small outline">View Full Analytics</button>
                         </div>
                         <div class="chart-wrapper">
                             <canvas id="studyChart"></canvas>
                         </div>
                     </div>
 
-                    <!-- Task Manager -->
+                    <!-- Today's Tasks -->
                     <div class="tasks-container glass-panel">
                         <div class="section-header">
-                            <h3>My Tasks</h3>
+                            <h3>Today's Tasks</h3>
                         </div>
                         
                         <form id="addTaskForm" class="add-task-form">
@@ -161,6 +150,39 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Main Grid Row 2 -->
+                <div class="main-grid split-grid-student">
+                    <!-- Subject Progress -->
+                    <div class="subject-progress-container glass-panel">
+                        <div class="section-header">
+                            <h3>Subject Progress</h3>
+                        </div>
+                        <div class="subjects-list" id="subjectsList">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+
+                    <!-- AI Study Assistant -->
+                    <div class="ai-assistant-widget glass-panel">
+                        <div class="section-header">
+                            <h3><i class="fa-solid fa-robot" style="color:var(--primary-blue);"></i> AI Study Assistant</h3>
+                        </div>
+                        <div class="ai-chat-box" id="aiStudyInsights">
+                            <div class="ai-message">
+                                <img src="https://ui-avatars.com/api/?name=AI&background=00e1ff&color=fff" alt="AI">
+                                <div class="msg-content">
+                                    <p>Hello! I'm analyzing your productivity patterns. Complete tasks to receive personalized study recommendations!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ai-input-area">
+                            <input type="text" placeholder="Ask AI anything about your studies...">
+                            <button class="btn-small glow"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>

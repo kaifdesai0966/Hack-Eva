@@ -164,8 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (activeRole === 'student') {
                     window.location.href = 'dashboard.html';
                 } else {
-                    alert('Mentor Dashboard coming soon! Log in as Student to see the premium dashboard.');
-                    btn.textContent = originalText;
+                    window.location.href = 'mentor-dashboard.html';
                 }
             }, 1000);
         });

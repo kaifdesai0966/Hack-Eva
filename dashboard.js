@@ -1,8 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
     // ---- DATABASE SIMULATION LAYER ----
-    // To meet hackathon requirements without a provided Firebase config,
-    // this acts as a persistent LocalStorage DB that strictly behaves like a real DB.
-    
     const DB = {
         getUser: (email) => JSON.parse(localStorage.getItem(`user_${email}`)),
         saveUser: (email, data) => localStorage.setItem(`user_${email}`, JSON.stringify(data)),
@@ -13,15 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // ---- AUTHENTICATION CHECK ----
     const currentUserEmail = localStorage.getItem('currentUser');
     if (!currentUserEmail) {
-        window.location.href = 'index.html'; // Redirect to login if not authenticated
+        window.location.href = 'index.html';
         return;
     }
 
     // Initialize/Fetch User Data
     let userData = DB.getUser(currentUserEmail);
-    
-    // If new user (empty state)
     let isNewUser = false;
+    
     if (!userData) {
         isNewUser = true;
         userData = {
@@ -31,53 +27,65 @@ document.addEventListener("DOMContentLoaded", () => {
             productivityScore: 0,
             tasksCompleted: 0,
             studyStreak: 0,
-            attendanceRate: 0,
             joinDate: new Date().toISOString(),
-            chartData: [0, 0, 0, 0, 0, 0, 0] // Weekly hours
+            chartData: [0, 0, 0, 0, 0, 0, 0],
+            subjects: [
+                { name: 'Mathematics', progress: 0, color: '#9d00ff' },
+                { name: 'Physics', progress: 0, color: '#00e1ff' },
+                { name: 'Computer Science', progress: 0, color: '#00ff88' },
+                { name: 'Chemistry', progress: 0, color: '#ffaa00' },
+                { name: 'English', progress: 0, color: '#ff3366' }
+            ]
         };
         DB.saveUser(currentUserEmail, userData);
+    }
+
+    // Ensure subjects array exists for old mock users who didn't have it
+    if (!userData.subjects) {
+        userData.subjects = [
+            { name: 'Mathematics', progress: Math.min(userData.tasksCompleted * 2, 100), color: '#9d00ff' },
+            { name: 'Physics', progress: Math.min(userData.tasksCompleted * 1.5, 100), color: '#00e1ff' },
+            { name: 'Computer Science', progress: Math.min(userData.tasksCompleted * 3, 100), color: '#00ff88' },
+            { name: 'Chemistry', progress: Math.min(userData.tasksCompleted * 1, 100), color: '#ffaa00' },
+            { name: 'English', progress: Math.min(userData.tasksCompleted * 0.5, 100), color: '#ff3366' }
+        ];
     }
 
     let tasks = DB.getTasks(currentUserEmail);
 
     // ---- UI POPULATION ----
     document.getElementById('userName').textContent = userData.name;
-    document.getElementById('welcomeMessage').textContent = `Welcome back, ${userData.name}!`;
+    document.getElementById('welcomeMessage').textContent = `Welcome, ${userData.name} 👋`;
     document.getElementById('navStreak').textContent = userData.studyStreak;
     document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${userData.name}&background=9d00ff&color=fff`;
 
-    // Elements
     const emptyStateAlert = document.getElementById('emptyStateAlert');
     const tasksCompletedEl = document.getElementById('tasksCompletedValue');
     const streakEl = document.getElementById('streakValue');
-    const attendanceEl = document.getElementById('attendanceValue');
-    
+    const subjectsList = document.getElementById('subjectsList');
+    const aiStudyInsights = document.getElementById('aiStudyInsights');
+
     function updateDashboardUI() {
-        // Calculate dynamic productivity score based on tasks and attendance
-        const maxTasks = 20;
-        let taskScore = Math.min((userData.tasksCompleted / maxTasks) * 50, 50); // up to 50%
-        let attScore = (userData.attendanceRate / 100) * 50; // up to 50%
+        // Calculate Score purely based on tasks & streaks (Max 100)
+        const maxTasksForScore = 30;
+        let score = Math.min((userData.tasksCompleted / maxTasksForScore) * 100, 100);
+        if (userData.tasksCompleted === 0) score = 0;
+        userData.productivityScore = Math.round(score);
         
-        if (userData.tasksCompleted === 0) taskScore = 0;
-        userData.productivityScore = Math.round(taskScore + attScore);
-        
-        // Update stats
+        // Update Stats
         tasksCompletedEl.textContent = userData.tasksCompleted;
         streakEl.textContent = userData.studyStreak;
-        attendanceEl.textContent = `${userData.attendanceRate}%`;
 
-        // Update Circular Ring
+        // Animate Ring
         const ring = document.getElementById('scoreRing');
         const scoreValue = document.getElementById('scoreValue');
-        const circumference = 2 * Math.PI * 52; // r=52
+        const circumference = 2 * Math.PI * 52;
         
-        // Animate score number
         let currentScore = parseInt(scoreValue.textContent) || 0;
         const targetScore = userData.productivityScore;
         const offset = circumference - (targetScore / 100) * circumference;
         ring.style.strokeDashoffset = offset;
 
-        // Ensure we don't end up in an infinite loop if current == target
         if (currentScore !== targetScore) {
             const animateScore = setInterval(() => {
                 if (currentScore < targetScore) currentScore++;
@@ -96,24 +104,74 @@ document.addEventListener("DOMContentLoaded", () => {
             emptyStateAlert.style.display = 'none';
         }
 
-        // Save state
+        // Render Subjects
+        renderSubjects();
+
+        // Generate AI Insight based on productivity
+        generateAIInsight();
+
         DB.saveUser(currentUserEmail, userData);
         updateChart();
+    }
+
+    function renderSubjects() {
+        subjectsList.innerHTML = '';
+        userData.subjects.forEach(sub => {
+            const div = document.createElement('div');
+            div.className = 'subject-item';
+            div.innerHTML = `
+                <div class="subject-header">
+                    <span>${sub.name}</span>
+                    <span>${Math.round(sub.progress)}%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fg" style="width: ${sub.progress}%; background-color: ${sub.color}; box-shadow: 0 0 10px ${sub.color};"></div>
+                </div>
+            `;
+            subjectsList.appendChild(div);
+        });
+    }
+
+    function generateAIInsight() {
+        // Wipe all but the first welcome message
+        while(aiStudyInsights.children.length > 1) {
+            aiStudyInsights.removeChild(aiStudyInsights.lastChild);
+        }
+
+        if (userData.tasksCompleted > 0) {
+            const div = document.createElement('div');
+            div.className = 'ai-message';
+            
+            let msgText = '';
+            if (userData.productivityScore < 30) {
+                msgText = `Great start! Try completing 2 more tasks today to boost your productivity score above 30%.`;
+            } else if (userData.productivityScore < 70) {
+                msgText = `You're on fire! 🔥 Keep your streak going. Focus on completing more subjects today to raise your progress bars!`;
+            } else {
+                msgText = `Incredible productivity! You are currently in the top 5% of active remote learners this week. Maintain this pace!`;
+            }
+
+            div.innerHTML = `
+                <img src="https://ui-avatars.com/api/?name=AI&background=00e1ff&color=fff" alt="AI">
+                <div class="msg-content">
+                    <p>${msgText}</p>
+                </div>
+            `;
+            aiStudyInsights.appendChild(div);
+            // scroll to bottom
+            aiStudyInsights.scrollTop = aiStudyInsights.scrollHeight;
+        }
     }
 
     // ---- CHART.JS INTEGRATION ----
     let studyChart;
     function updateChart() {
         const ctx = document.getElementById('studyChart').getContext('2d');
-        
-        // Gradient for line
         const gradient = ctx.createLinearGradient(0, 0, 0, 300);
         gradient.addColorStop(0, 'rgba(157, 0, 255, 0.5)');
         gradient.addColorStop(1, 'rgba(157, 0, 255, 0.0)');
 
-        const data = isNewUser && userData.tasksCompleted === 0 
-            ? [0, 0, 0, 0, 0, 0, 0] 
-            : userData.chartData;
+        const data = (userData.tasksCompleted === 0) ? [0,0,0,0,0,0,0] : userData.chartData;
 
         if (studyChart) studyChart.destroy();
 
@@ -141,15 +199,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        ticks: { color: '#8b92a5' }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#8b92a5' }
-                    }
+                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8b92a5' } },
+                    x: { grid: { display: false }, ticks: { color: '#8b92a5' } }
                 }
             }
         });
@@ -163,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderTasks() {
         taskList.innerHTML = '';
         if (tasks.length === 0) {
-            taskList.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px;">No tasks yet. Add one above!</p>';
+            taskList.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px;">No pending tasks. Add one above!</p>';
             return;
         }
 
@@ -171,16 +222,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const div = document.createElement('div');
             div.className = `task-item ${task.completed ? 'completed' : ''}`;
             div.innerHTML = `
-                <div class="task-checkbox" data-index="${index}">
-                    <i class="fa-solid fa-check"></i>
-                </div>
+                <div class="task-checkbox" data-index="${index}"><i class="fa-solid fa-check"></i></div>
                 <span class="task-title">${task.title}</span>
                 <button class="task-delete" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
             `;
             taskList.appendChild(div);
         });
 
-        // Add Listeners
         document.querySelectorAll('.task-checkbox').forEach(box => {
             box.addEventListener('click', (e) => {
                 const idx = e.currentTarget.dataset.index;
@@ -188,10 +236,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 if (tasks[idx].completed) {
                     userData.tasksCompleted++;
-                    // Simulate random chart data growth when completing tasks
                     userData.chartData = userData.chartData.map(h => h + (Math.random() * 0.5));
-                    userData.attendanceRate = Math.min(100, userData.attendanceRate + 5);
                     if (userData.studyStreak === 0) userData.studyStreak = 1;
+
+                    // Boost random subject progress
+                    const randSub = Math.floor(Math.random() * userData.subjects.length);
+                    userData.subjects[randSub].progress = Math.min(100, userData.subjects[randSub].progress + (Math.random() * 10 + 5));
+
                 } else {
                     userData.tasksCompleted = Math.max(0, userData.tasksCompleted - 1);
                 }
@@ -205,13 +256,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('.task-delete').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const idx = e.currentTarget.dataset.index;
-                
-                // If we delete a completed task, optionally decrement stats. 
-                // For this demo, we'll just remove it.
                 if (tasks[idx].completed) {
                     userData.tasksCompleted = Math.max(0, userData.tasksCompleted - 1);
                 }
-                
                 tasks.splice(idx, 1);
                 DB.saveTasks(currentUserEmail, tasks);
                 renderTasks();
@@ -227,22 +274,14 @@ document.addEventListener("DOMContentLoaded", () => {
             tasks.push({ title, completed: false, createdAt: new Date() });
             DB.saveTasks(currentUserEmail, tasks);
             taskInput.value = '';
-            
-            // If it's the very first task, remove empty state immediately
-            if (isNewUser) {
-                isNewUser = false;
-            }
-            
             renderTasks();
             updateDashboardUI();
         }
     });
 
-    // Initial Render
     renderTasks();
     updateDashboardUI();
 
-    // Logout
     document.getElementById('logoutBtn').addEventListener('click', (e) => {
         e.preventDefault();
         localStorage.removeItem('currentUser');
