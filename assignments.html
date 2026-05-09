@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduBridge - Assignments</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon"><i class="fa-solid fa-bridge-water"></i></span>
+                EDUBRIDGE
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="assignments.html" class="active"><i class="fa-solid fa-book-open"></i> Assignments</a>
+                <a href="#"><i class="fa-solid fa-note-sticky"></i> Notes</a>
+                <a href="#"><i class="fa-solid fa-chart-pie"></i> Study Analytics</a>
+                <a href="#"><i class="fa-solid fa-bullseye"></i> Goals</a>
+                <a href="#" class="ai-link"><i class="fa-solid fa-robot"></i> AI Assistant <span class="badge-new">NEW</span></a>
+                <a href="#"><i class="fa-solid fa-bell"></i> Notifications</a>
+            </nav>
+            <div class="sidebar-bottom">
+                <a href="#"><i class="fa-solid fa-gear"></i> Settings</a>
+                <a href="#" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="topbar">
+                <div class="page-title">
+                    <h2 class="gradient-text"><i class="fa-solid fa-book-open" style="margin-right: 10px; color: var(--primary-blue);"></i> Assignments</h2>
+                </div>
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="assignmentSearch" placeholder="Search assignments...">
+                </div>
+                <div class="topbar-right">
+                    <div class="filter-dropdown">
+                        <select id="assignmentFilter" class="glass-select">
+                            <option value="all">All Assignments</option>
+                            <option value="pending">Pending</option>
+                            <option value="submitted">Submitted</option>
+                            <option value="overdue">Overdue</option>
+                        </select>
+                    </div>
+                    <button class="icon-btn"><i class="fa-solid fa-bell"></i></button>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=Student&background=random" alt="Avatar" id="userAvatar">
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-scrollable" id="assignmentsContainer">
+                
+                <!-- LIST VIEW -->
+                <div id="assignmentsListView" class="assignments-view active">
+                    
+                    <!-- Empty State Alert (Hidden by default) -->
+                    <div id="emptyStateAssignments" class="assignments-empty-state glass-panel" style="display: none;">
+                        <img src="assets/assignment_empty_state.png" alt="No Assignments" class="empty-state-img">
+                        <h3>Your assignments will appear here.</h3>
+                        <p>Enjoy your free time, or explore the study resources.</p>
+                    </div>
+
+                    <!-- Assignments Grid -->
+                    <div class="assignments-grid" id="assignmentsGrid">
+                        <!-- Dynamic Cards will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- DETAILS VIEW (Hidden by default) -->
+                <div id="assignmentDetailsView" class="assignments-view" style="display: none;">
+                    
+                    <div class="details-top-nav">
+                        <button class="btn-small outline" id="backToAssignmentsBtn"><i class="fa-solid fa-arrow-left"></i> Back to List</button>
+                        <div class="details-status-badge" id="detailStatusBadge">Pending</div>
+                    </div>
+
+                    <div class="details-main-content glass-panel">
+                        <div class="details-header">
+                            <div class="details-title-area">
+                                <span class="subject-tag" id="detailSubject">Subject</span>
+                                <h1 id="detailTitle">Assignment Title</h1>
+                                <div class="mentor-info">
+                                    <i class="fa-solid fa-chalkboard-user"></i> Assigned by <span id="detailMentor">Professor</span>
+                                </div>
+                            </div>
+                            <div class="deadline-timer-box" id="deadlineBox">
+                                <div class="timer-icon"><i class="fa-regular fa-clock"></i></div>
+                                <div class="timer-info">
+                                    <span class="timer-label">Due Date</span>
+                                    <h3 class="timer-value" id="detailDueDate">Date</h3>
+                                    <span class="time-remaining glow-text" id="detailTimeRemaining">Time left</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="details-body">
+                            <div class="description-section">
+                                <h3><i class="fa-solid fa-align-left"></i> Description & Instructions</h3>
+                                <div class="description-content" id="detailDescription">
+                                    <!-- Dynamic Description -->
+                                </div>
+
+                                <h3 class="mt-4"><i class="fa-solid fa-paperclip"></i> Attached Resources</h3>
+                                <div class="resource-list" id="detailResources">
+                                    <!-- Dynamic Resources -->
+                                </div>
+                            </div>
+
+                            <div class="submission-section">
+                                <h3><i class="fa-solid fa-cloud-arrow-up"></i> Submission</h3>
+                                
+                                <div class="submission-panel" id="submissionPanel">
+                                    <div class="upload-zone interactive" id="uploadZone">
+                                        <i class="fa-solid fa-file-arrow-up"></i>
+                                        <p>Drag & Drop your assignment here</p>
+                                        <span class="upload-hint">or click to browse (PDF, DOCX, ZIP)</span>
+                                        <input type="file" id="fileInput" hidden>
+                                    </div>
+                                    
+                                    <div class="file-preview glass-panel" id="filePreview" style="display: none;">
+                                        <div class="file-info">
+                                            <i class="fa-solid fa-file-pdf pdf-icon"></i>
+                                            <span class="file-name" id="previewFileName">assignment_v1.pdf</span>
+                                        </div>
+                                        <button class="remove-file-btn" id="removeFileBtn"><i class="fa-solid fa-xmark"></i></button>
+                                    </div>
+
+                                    <button class="glow-btn submit-assignment-btn w-100" id="submitAssignmentBtn" disabled>
+                                        <span><i class="fa-solid fa-paper-plane"></i> Submit Assignment</span>
+                                        <div class="btn-glow"></div>
+                                    </button>
+                                </div>
+
+                                <div class="submission-success-panel" id="submissionSuccessPanel" style="display: none;">
+                                    <div class="success-animation">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                    </div>
+                                    <h4>Successfully Submitted!</h4>
+                                    <p>Timestamp: <span id="submissionTimestamp">--</span></p>
+                                    <button class="btn-small outline mt-3" id="undoSubmissionBtn">Undo Submission</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="assignments.js"></script>
+</body>
+</html>
