@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduBridge - Notes & Resources</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon"><i class="fa-solid fa-bridge-water"></i></span>
+                EDUBRIDGE
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="assignments.html"><i class="fa-solid fa-book-open"></i> Assignments</a>
+                <a href="notes.html" class="active"><i class="fa-solid fa-note-sticky"></i> Notes</a>
+                <a href="#"><i class="fa-solid fa-chart-pie"></i> Study Analytics</a>
+                <a href="#"><i class="fa-solid fa-bullseye"></i> Goals</a>
+                <a href="#" class="ai-link"><i class="fa-solid fa-robot"></i> AI Assistant <span class="badge-new">NEW</span></a>
+                <a href="#"><i class="fa-solid fa-bell"></i> Notifications</a>
+            </nav>
+            <div class="sidebar-bottom">
+                <a href="#"><i class="fa-solid fa-gear"></i> Settings</a>
+                <a href="#" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="topbar">
+                <div class="page-title">
+                    <h2 class="gradient-text"><i class="fa-solid fa-note-sticky" style="margin-right: 10px; color: var(--primary-blue);"></i> Notes & Resources</h2>
+                </div>
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="notesSearch" placeholder="Search chapter notes...">
+                </div>
+                <div class="topbar-right">
+                    <div class="filter-dropdown">
+                        <select id="subjectFilter" class="glass-select">
+                            <option value="all">All Subjects</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="English">English</option>
+                        </select>
+                    </div>
+                    <button class="icon-btn"><i class="fa-solid fa-bell"></i></button>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=Student&background=random" alt="Avatar" id="userAvatar">
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-scrollable" id="notesMainContainer">
+                
+                <!-- Empty State Alert (Hidden by default) -->
+                <div id="emptyStateNotes" class="assignments-empty-state glass-panel" style="display: none;">
+                    <div class="floating-books">
+                        <i class="fa-solid fa-book-journal-whills empty-icon-glow"></i>
+                    </div>
+                    <h3>No notes uploaded yet.</h3>
+                    <p>Notes shared by mentors will appear here.</p>
+                </div>
+
+                <!-- Notes Container dynamically filled by JS -->
+                <div id="notesSubjectContainer">
+                    <!-- Example Static Structure (will be replaced/augmented by JS) -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- PDF Viewer Modal Overlay -->
+    <div id="pdfViewerModal" class="pdf-viewer-overlay" style="display: none;">
+        <div class="pdf-viewer-container glass-panel-heavy">
+            <header class="pdf-viewer-header">
+                <div class="pdf-title-info">
+                    <i class="fa-solid fa-file-pdf pdf-icon"></i>
+                    <div>
+                        <h3 id="pdfViewerTitle">Chapter Title</h3>
+                        <span id="pdfViewerMeta">Uploaded by Mentor</span>
+                    </div>
+                </div>
+                <div class="pdf-controls">
+                    <button class="icon-btn tooltip" data-tip="Zoom Out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                    <button class="icon-btn tooltip" data-tip="Zoom In"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                    <button class="icon-btn tooltip" data-tip="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+                    <button class="icon-btn tooltip" id="pdfDownloadBtn" data-tip="Download"><i class="fa-solid fa-download"></i></button>
+                    <button class="icon-btn close-btn" id="closePdfBtn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </header>
+
+            <div class="pdf-viewer-body">
+                <!-- PDF Preview Panel (Mocked) -->
+                <div class="pdf-preview-panel full-width">
+                    <div class="pdf-mock-page">
+                        <h2 id="mockPdfTitle">Loading PDF Content...</h2>
+                        <div class="pdf-mock-lines"></div>
+                        <div class="pdf-mock-lines"></div>
+                        <div class="pdf-mock-lines"></div>
+                        <p class="watermark">EduBridge Premium Viewer</p>
+                    </div>
+                    <div class="page-navigation">
+                        <button class="btn-small outline"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span>Page 1 / 15</span>
+                        <button class="btn-small outline"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="notes.js"></script>
+</body>
+</html>
